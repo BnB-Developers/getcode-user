@@ -22,11 +22,11 @@ async function run() {
 }
 run()
 
-app.get('/api/:phone', async (req, res) => {
+app.get('/api/:name', async (req, res) => {
     const myDb = client.db('user')
     const myColl = myDb.collection('data')
     const data =  await myColl.findOne({
-        number:parseInt(req.params.phone)
+        name:req.params.name
     })
     console.log(data)
     res.statusCode=200
