@@ -3,7 +3,7 @@ require('dotenv').config()
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const app = express()
 const uri = "mongodb+srv://vercel-admin-user:RpUpV6Tp4oZk6Mjr@cluster0.fjnp4qu.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-
+const bodyParser = require('body-parser')
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
     serverApi: {
@@ -22,7 +22,10 @@ async function run() {
 }
 run()
 
-app.get('/api/', async (req, res) => {
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended:false}))
+
+app.get('/api', async (req, res) => {
     const myDb = client.db('user')
     const myColl = myDb.collection('data')
     const data =  await myColl.findOne({
@@ -39,6 +42,14 @@ app.get('/api/', async (req, res) => {
     else{
         res.send({message:'user not found'})
     }
+})
+
+app.post('/api',async (req,res)=>{
+    console.log(req.body)
+    const myDb = client.db('user')
+    const myColl = myDb.collection('data')
+    const data =  await myColl.insertOne(req.body)
+    res.send({message:'user added successfully',success:true})
 })
 
 app.listen(8000,()=>{
