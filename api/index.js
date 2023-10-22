@@ -26,13 +26,19 @@ app.get('/api/', async (req, res) => {
     const myDb = client.db('user')
     const myColl = myDb.collection('data')
     const data =  await myColl.findOne({
-        name:req.query.name
+        email:req.query.email
     })
+    
     console.log(data)
     res.statusCode=200
     res.setHeader('Content-Type','application/json');
     res.setHeader('Access-Control-Allow-Origin','http://localhost:3000')
-    res.send(data)
+    if(data){
+        res.send(data)
+    }
+    else{
+        res.send({message:'user not found'})
+    }
 })
 
 app.listen(8000,()=>{
