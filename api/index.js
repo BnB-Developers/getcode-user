@@ -22,11 +22,11 @@ async function run() {
 }
 run()
 
-app.get('/api/:name', async (req, res) => {
+app.get('/api/', async (req, res) => {
     const myDb = client.db('user')
     const myColl = myDb.collection('data')
     const data =  await myColl.findOne({
-        name:req.params.name
+        name:req.query.name
     })
     console.log(data)
     res.statusCode=200
