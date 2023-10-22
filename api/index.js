@@ -30,5 +30,8 @@ app.get('/api', async (req, res) => {
     res.send(data)
 })
 
+app.listen(3000,()=>{
+    console.log('listening to port 3000')
+})
 
 module.exports = app
