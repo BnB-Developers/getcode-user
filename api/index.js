@@ -29,6 +29,7 @@ app.get('/api', async (req, res) => {
     console.log(data)
     res.statusCode=200
     res.setHeader('Content-Type','application/json');
+    res.setHeader('Access-Control-Allow-Origin','http://localhost:3000')
     res.send(data)
 })
 
