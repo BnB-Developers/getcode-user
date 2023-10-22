@@ -22,10 +22,12 @@ async function run() {
 }
 run()
 
-app.get('/api', async (req, res) => {
+app.get('/api/:email', async (req, res) => {
     const myDb = client.db('user')
     const myColl = myDb.collection('data')
-    const data =  await myColl.findOne({})
+    const data =  await myColl.findOne({
+        email:req.params.email
+    })
     console.log(data)
     res.statusCode=200
     res.setHeader('Content-Type','application/json');
@@ -33,7 +35,7 @@ app.get('/api', async (req, res) => {
     res.send(data)
 })
 
-app.listen(3000,()=>{
+app.listen(8000,()=>{
     console.log('listening to port 3000')
 })
 
