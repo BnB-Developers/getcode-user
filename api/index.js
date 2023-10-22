@@ -27,6 +27,8 @@ app.get('/api', async (req, res) => {
     const myColl = myDb.collection('data')
     const data =  await myColl.findOne({})
     console.log(data)
+    res.statusCode=200
+    res.setHeader('Content-Type','application/json');
     res.send(data)
 })
 
