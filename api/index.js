@@ -16,7 +16,7 @@ const client = new MongoClient(uri, {
     }
 });
 // Endpoint to fetch data from the MongoDB collection
-app.get('/api', async (req, res) => {
+app.get('/api/getAllCamps', async (req, res) => {
     try {
 
         // Connect to the MongoDB server
