@@ -1,10 +1,13 @@
-const express = require('express')
-require('dotenv').config()
+const express = require('express');
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const app = express()
-const uri = "mongodb+srv://vercel-admin-user:RpUpV6Tp4oZk6Mjr@cluster0.fjnp4qu.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-const bodyParser = require('body-parser')
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+
+const app = express();
+const PORT = 3000;
+
+// Connection URI and Database Name
+const uri = 'mongodb+srv://bnbdevs:feLC7m4jiT9zrmHh@cluster0.fjnp4qu.mongodb.net/?retryWrites=true&w=majority';
+const dbName = 'MFC';
+
 const client = new MongoClient(uri, {
     serverApi: {
         version: ServerApiVersion.v1,
@@ -12,48 +15,32 @@ const client = new MongoClient(uri, {
         deprecationErrors: true,
     }
 });
-
-async function run() {
+// Endpoint to fetch data from the MongoDB collection
+app.get('/getAllCamps', async (req, res) => {
     try {
-        await client.connect();        
+
+        // Connect to the MongoDB server
+        await client.connect();
+
+        // Access the specific database
+        const db = client.db(dbName);
+
+        // Access the specific collection
+        const collection = db.collection('Camps');
+
+        // Fetch data from the collection
+        const items = await collection.find({}).toArray();
+
+        // Return the fetched data as JSON
+        res.json(items);
+
+        // Close the connection
+       
     } catch (error) {
-        console.log(error)
+        res.status(500).json({ message: error.message });
     }
-}
-run()
+});
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended:false}))
-
-app.get('/api', async (req, res) => {
-    const myDb = client.db('user')
-    const myColl = myDb.collection('data')
-    const data =  await myColl.findOne({
-        email:req.query.email
-    })
-    
-    console.log(data)
-    res.statusCode=200
-    res.setHeader('Content-Type','application/json');
-    res.setHeader('Access-Control-Allow-Origin','https://getcode-eight.vercel.app')
-    if(data){
-        res.send(data)
-    }
-    else{
-        res.send({message:'user not found'})
-    }
-})
-
-app.post('/api',async (req,res)=>{
-    console.log(req.body)
-    const myDb = client.db('user')
-    const myColl = myDb.collection('data')
-    const data =  await myColl.insertOne(req.body)
-    res.send({message:'user added successfully',success:true})
-})
-
-app.listen(8000,()=>{
-    console.log('listening to port 3000')
-})
-
-module.exports = app
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
